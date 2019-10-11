@@ -3,19 +3,39 @@
 		<v-card flat>
 			<v-card-title>Parallely</v-card-title>
 			<v-card-text>
-				<v-form ref="login" id="login" method="post">
+				<v-form ref="login" id="login" method="post" @submit.prevent="loginUser">
 					<v-text-field type="email" label="Email" v-model="email" required></v-text-field>
 					<v-text-field type="password" label="Password" v-model="password" required></v-text-field>
-					<v-btn type="submit">Submit</v-btn>
+					<v-btn type="submit">Login</v-btn>
 				</v-form>
+				<span v-if="message!=''">{{ message }}</span>
 			</v-card-text>
 		</v-card>
 	</div>
 </template>
 
 <script>
+import firebase from 'firebase'
 export default {
-	name: 'Login'
+	name: 'Login',
+	data() {
+		return {
+			email: '',
+			password: '',
+			message: ''
+		}
+	},
+	methods: {
+		loginUser() {
+			firebase.auth().signInWithEmailAndPassword(this.email,this.password)
+			.then(() => {
+				this.$router.push('/dashboard')
+			})
+			.catch((err) => {
+				this.message = err.message
+			})
+		}
+	}
 }
 </script>
 
