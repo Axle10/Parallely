@@ -25,6 +25,9 @@ export default {
 		signupUser() {
 			firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
 			.then((result) => {
+				result.user.sendEmailVerification()
+				.then(() => {})
+				.catch((err) => console.log(err));
 				result.user.updateProfile({
 					displayName: this.name
 				})
@@ -32,7 +35,6 @@ export default {
 					this.$emit('success','Successfully registered')
 				})
 				.catch((err) => console.log(err))
-
 			})
 			.catch((err) => {
 				this.message = err.message

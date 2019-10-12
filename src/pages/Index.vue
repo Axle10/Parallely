@@ -27,6 +27,7 @@ import LoginForm from '@/components/LoginForm'
 import SignupForm from '@/components/SignupForm'
 import Banner from '@/components/Banner'
 import Snackbar from '@/components/Snackbar'
+import { mapGetters } from 'vuex'
 export default {
 	name: 'Home',
 	components: {
@@ -40,6 +41,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters('user',['isAuthenticated']),
 		hideOnMobile() {
 			if(this.$vuetify.breakpoint.smAndDown)
 			{
@@ -57,6 +59,13 @@ export default {
 			this.snackbar = true
 			this.signUpDialog = false
 		}
+	},
+	created() {
+		// console.log(this.isAuthenticated)
+		// if(this.isAuthenticated==true)
+		// {
+		// 	this.$router.replace('/dashboard')
+		// }
 	}
 }
 </script>
@@ -68,7 +77,6 @@ export default {
 }
 .hide-on-mobile
 {
-	/* visibility: hidden; */
 	display: none;
 }
 </style>

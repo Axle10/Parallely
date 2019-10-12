@@ -1,5 +1,6 @@
 <template>
 	<div>
+		Profile page<br>
 		{{user}}
 		<div v-if="user.emailVerified">Email Verified</div>
 		<div v-else>Email not Verified</div>
@@ -7,9 +8,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState,mapGetters } from 'vuex'
 export default {
-	name: 'Dashboard',
+	name: 'Profile',
 	computed: {
 		...mapState({
 			user: state => state.user.user
@@ -25,7 +26,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
-</style>>
-
+</style>
