@@ -1,12 +1,13 @@
 <template>
 	<div>
 		<v-row no-gutters>
-			<v-col cols="10" sm="10" md="4" offset-md="1" class="component-login">
+			<v-col cols="12" sm="12" md="4" offset-md="1" class="component-login">
 				<v-container>
 					<LoginForm />
+					Don't have an account,
 					<v-dialog v-model="signUpDialog" persisitent max-width="600px">
 						<template v-slot:activator="{ on }">
-							<v-btn dark v-on="on">Sign Up</v-btn>
+							<v-btn v-on="on" text>Sign Up</v-btn>
 						</template>
 						<v-card>
 							<v-card-text><SignupForm @success="success"/></v-card-text>

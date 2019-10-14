@@ -1,4 +1,5 @@
 const user = {
+	provider: '',
 	email: '',
 	emailVerified: '',
 	displayName: '',
