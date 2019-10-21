@@ -4,28 +4,16 @@
 			<v-app-bar-nav-icon class="hidden-md-and-up"></v-app-bar-nav-icon>
 
 			<v-toolbar-title>P A R A L L E L Y</v-toolbar-title>
-			<v-row no-gutters>
-				<v-col md="8" offset-md="1">
-					<v-container>
-						<v-form method="post" @submit.prevent="searchUser">
-							<v-text-field
-								append-icon="search"
-								placeholder="Search an user"
-								hide-details
-								outlined
-								class="hidden-sm-and-down"
-							/>
-							<!-- <v-btn inline icon><v-icon>search</v-icon></v-btn> -->
-						</v-form>
-					</v-container>
-				</v-col>
-			</v-row>
+
+			<v-spacer />
 			<div class="user">
 				<v-menu bottom offset-y>
 					<template v-slot:activator="{ on }">
 						<v-btn v-on="on" text class="user-btn">
-							<v-icon v-if="user.photoURL==''">person</v-icon>
-							<div v-if="user.photoURL!='' && user.photoURL != null" ><v-img :src="user.photoURL"></v-img></div>
+							<div class="user-image">
+								<v-icon v-if="user.photoURL==''">person</v-icon>
+								<div v-if="user.photoURL!='' && user.photoURL != null" ><v-img :src="user.photoURL"></v-img></div>
+							</div>
 							Welcome, <span> {{ user.displayName }} </span>
 						</v-btn>
 						<!-- <font-awesome-icon :icon="['fas', 'angle-down']"/> -->
@@ -66,7 +54,7 @@ export default {
 			userItems: [
 				{ title: 'Dashboard', to: '/dashboard'},
 				{ title: 'Profile', to: '/profile'},
-				{ title: 'Logout', }
+				{ title: 'Logout' }
 			]
 		}
 	},
@@ -84,8 +72,6 @@ export default {
 				this.$router.replace('/')
 			});
 			this.callSetUser({})
-			console.log(this.user)
-			console.log(firebase.auth().currentUser)
 		},
 		searchUser() {
 			console.log('Search user')
@@ -99,11 +85,21 @@ export default {
 <style scoped>
 .user
 {
-	margin-right: 10%;
+	padding-bottom: 1%;
 }
 .user-btn:hover
 {
 	background-color: transparent;
 	box-shadow: none;
+}
+.user-image
+{
+	margin-right: 5%;
+	height: 50px;
+	width: 50px;
+}
+.search-btn
+{
+	margin-top: 10%;
 }
 </style>

@@ -1,9 +1,29 @@
 <template>
-	<div>
+	<v-app>
 		<v-row no-gutters>
 			<v-col cols="12" sm="12" md="4" offset-md="1" class="component-login">
+				<div class="particles-js">
+					<vue-particles
+						color="#9999ff"
+						:particleOpacity="0.7"
+						:particlesNumber="80"
+						shapeType="circle"
+						:particleSize="4"
+						linesColor="#9999ff"
+						:linesWidth="1"
+						:lineLinked="true"
+						:lineOpacity="0.4"
+						:linesDistance="150"
+						:moveSpeed="3"
+						:hoverEffect="true"
+						hoverMode="grab"
+						:clickEffect="true"
+						clickMode="push"
+					>
+					</vue-particles>
+				</div>
 				<v-container>
-					<LoginForm />
+					<LoginForm /><br>
 					Don't have an account,
 					<v-dialog v-model="signUpDialog" persisitent max-width="600px">
 						<template v-slot:activator="{ on }">
@@ -20,7 +40,7 @@
 			</v-col>
 		</v-row>
 		<div v-if="snackbar==true"><Snackbar :message="snackbar_message" :snackbar="snackbar" /></div>
-	</div>
+	</v-app>
 </template>
 
 <script>
@@ -72,6 +92,15 @@ export default {
 </script>
 
 <style scoped>
+.particles-js
+{
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
 .component-login
 {
 	margin-top: 10%;

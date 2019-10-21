@@ -1,8 +1,7 @@
 <template>
-	<div class="login">
-		<v-card flat>
-			<v-card-title>Parallely</v-card-title>
-			<v-card-text>
+	<div :class="$vuetify.breakpoint.smAndDown ? 'login' : ''">
+		<!-- <v-card flat>
+			<v-card-text> -->
 				<v-form ref="login" id="login" method="post" @submit.prevent="loginUser">
 					<v-text-field
 						prepend-icon="person" placeholder=" " autocomplete="off"
@@ -24,15 +23,15 @@
 					<v-btn type="submit" rounded color="deep-purple accent-4"
 						 form="login" dark>Login</v-btn>
 				</v-form><br>
-				<v-btn color="blue" class="white--text mr-3" rounded @click.prevent="loginUserWithFacebook">
+				<v-btn color="blue" class="white--text" rounded @click.prevent="loginUserWithFacebook">
 					Login with Facebook<v-icon right>mdi-facebook</v-icon>
 				</v-btn><br><br>
 
-				<v-btn color="red" class="white--text ml-3" rounded @click.prevent="loginUserWithGoogle">
+				<v-btn color="red" class="white--text" rounded @click.prevent="loginUserWithGoogle">
 					Login With Google<v-icon right>mdi-google</v-icon>
 				</v-btn>
-			</v-card-text>
-		</v-card>
+			<!-- </v-card-text>
+		</v-card> -->
 	</div>
 </template>
 
@@ -55,7 +54,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('user',['callSetUser']),
+		...mapActions('user',['callSetUser','checkUserExistence']),
 		loginUser() {
 			firebase.auth().signInWithEmailAndPassword(this.email,this.password)
 			.then((result) => {
@@ -71,6 +70,7 @@ export default {
 			firebase.auth().signInWithPopup(provider)
 			.then((result) => {
 				this.callSetUser(firebase.auth().currentUser)
+				this.checkUserExistence(firebase.auth().currentUser)
 				this.$router.push('/dashboard')
 			})
 			.catch((err) => {
@@ -87,6 +87,7 @@ export default {
 				})
 				.then(() => {
 					this.callSetUser(firebase.auth().currentUser)
+					this.checkUserExistence(firebase.auth().currentUser)
 					this.$router.push('/dashboard')
 				})
 				.catch((err) => console.log(err))
@@ -102,7 +103,7 @@ export default {
 <style scoped>
 .login
 {
-	margin-bottom: 5%;
+	margin-top: 20%;
 }
 .login-btn
 {

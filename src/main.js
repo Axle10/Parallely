@@ -6,6 +6,7 @@ import router from './router'
 import firebase from 'firebase'
 import firebaseConfig from '../firebase/config'
 import vuetify from '@/plugins/vuetify'
+import vueParticles from 'vue-particles'
 import store from '@/store/index'
 import { mapActions } from 'vuex'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -15,6 +16,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faUserSecret)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+Vue.use(vueParticles)
 
 Vue.config.productionTip = false
 
@@ -31,6 +34,8 @@ new Vue({
 		firebase.initializeApp(firebaseConfig);
 		firebase.auth().onAuthStateChanged((firebaseUser) => {
 			if(firebaseUser!=null) {
+				console.log('Current user')
+				console.log(firebase.auth().currentUser)
 				this.callSetUser(firebase.auth().currentUser)
 			}
 			else

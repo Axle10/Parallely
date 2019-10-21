@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<img src="https://kiitmun.org/wp-content/uploads/2019/07/registration.jpg">
+		<!-- <img src="https://kiitmun.org/wp-content/uploads/2019/07/registration.jpg"> -->
 	</div>
 </template>
 

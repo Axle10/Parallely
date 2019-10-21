@@ -12,6 +12,7 @@
 
 <script>
 import firebase from 'firebase'
+import { mapActions } from 'vuex'
 export default {
 	data() {
 		return {
@@ -22,12 +23,14 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions('user',['createUserInDb']),
 		signupUser() {
 			firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
 			.then((result) => {
 				result.user.sendEmailVerification()
 				.then(() => {})
 				.catch((err) => console.log(err));
+				this.createUserInDb(result.user);
 				result.user.updateProfile({
 					displayName: this.name
 				})
@@ -35,6 +38,7 @@ export default {
 					this.$emit('success','Successfully registered')
 				})
 				.catch((err) => console.log(err))
+
 			})
 			.catch((err) => {
 				this.message = err.message
