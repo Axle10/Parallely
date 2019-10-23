@@ -34,13 +34,13 @@
 
 		</v-app-bar>
 
-		<v-content v-if="user.emailVerified==false">
+		<!-- <v-content v-if="user.emailVerified==false">
 			<v-dialog v-model="emailNotVerifiedDialog" persistent max-width="600px">
 				<v-card>
 					<v-card-text>Verify your email to continue</v-card-text>
 				</v-card>
 			</v-dialog>
-		</v-content>
+		</v-content> -->
 	</div>
 </template>
 
