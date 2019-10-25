@@ -19,7 +19,9 @@ export default {
 		firebase.database().ref('users/' + payload.uid).set({
 			uid: payload.uid,
 			email: payload.email,
-			name: payload.displayName
+			name: payload.displayName,
+			connections: [],
+			bio: ''
 		})
 	}
 }

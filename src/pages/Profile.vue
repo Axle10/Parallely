@@ -10,7 +10,7 @@
 				<v-col cols="12" sm="12" md="4">
 					<Details />
 				</v-col>
-				<v-col cols="12" sm="12" md="7" offset-md="1">
+				<v-col cols="12" sm="12" md="8" >
 					<editprofile />
 				</v-col>
 			</v-row>

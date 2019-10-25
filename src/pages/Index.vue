@@ -25,7 +25,7 @@
 				<v-container>
 					<LoginForm /><br>
 					Don't have an account,
-					<v-dialog v-model="signUpDialog" persisitent max-width="600px">
+					<v-dialog v-model="signUpDialog" persistent max-width="600px">
 						<template v-slot:activator="{ on }">
 							<v-btn v-on="on" text>Sign Up</v-btn>
 						</template>
