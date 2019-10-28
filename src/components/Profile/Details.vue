@@ -93,7 +93,12 @@ export default {
 			firebase.auth().currentUser.updateProfile({
 				photoURL: user.photoURL
 			}).then(() => {})
-				.catch((err) => console.log(err))
+			.catch((err) => console.log(err));
+			var firestore = firebase.firestore();
+			var userDocRef = firestore.doc(`users/${firebase.auth().currentUser.uid}`)
+			userDocRef.get().then((doc) => {
+				userDocRef.update(user)
+			})
 			// this.callSetUser(user)
 			this.pictureChangeDialog =false
 		}

@@ -4,7 +4,7 @@
 			<v-card rounded class="editprofile-card-outer">
 				<v-container>
 					<v-row>
-						<v-col cols="8" sm="8" md="4">
+						<v-col cols="8" sm="8" md="4" class="editprofile-component">
 							Phone Number:
 							<div>
 								<span v-if="user.phoneNumber!=null && editPhoneMode==false">{{ user.phoneNumber }}</span>
@@ -98,5 +98,9 @@ export default {
 .edit-textfield
 {
 	border-radius: 20%;
+}
+.editprofile-component
+{
+	height: 33%;
 }
 </style>

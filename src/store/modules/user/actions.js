@@ -4,24 +4,25 @@ export default {
 		commit('setUser',payload)
 	},
 	checkUserExistence({ commit,dispatch }, payload) {
-		firebase.database().ref('users/' + payload.uid).once("value" , snapshot => {
-			if(snapshot.exists())
-			{
-				//
-			}
-			else
+		var firestore = firebase.firestore();
+		var userDocRef = firestore.doc(`users/${payload.uid}`)
+		userDocRef.get().then((doc) => {
+			if(!doc.exists)
 			{
 				dispatch('createUserInDb',payload)
 			}
 		})
 	},
 	createUserInDb({ commit }, payload) {
-		firebase.database().ref('users/' + payload.uid).set({
+		var firestore = firebase.firestore();
+		var userRef = firestore.collection('users')
+		userRef.doc(`${payload.uid}`).set({
 			uid: payload.uid,
 			email: payload.email,
 			name: payload.displayName,
-			connections: [],
-			bio: ''
-		})
+			connections: new Array(),
+			bio: '',
+			photoURL: payload.photoURL
+		}).then(() => {}).catch((err) => console.log(err))
 	}
 }

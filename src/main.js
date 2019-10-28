@@ -4,7 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import firebase from 'firebase'
+// import * as admin from 'firebase-admin'
 import firebaseConfig from '../firebase/config'
+import firebaseAdminKey from '../firebase/firebase-admin-key'
 import vuetify from '@/plugins/vuetify'
 import vueParticles from 'vue-particles'
 import store from '@/store/index'
@@ -32,6 +34,11 @@ new Vue({
 	created() {
 		// Initialize firebase
 		firebase.initializeApp(firebaseConfig);
+		// Initialize firebase-admin
+		// admin.initializeApp({
+		// 	credential: firebaseAdminKey,
+		// 	databaseURL: 'https://parallely-652a6.firebaseio.com'
+		// })
 		firebase.auth().onAuthStateChanged((firebaseUser) => {
 			if(firebaseUser!=null) {
 				console.log('Current user')
