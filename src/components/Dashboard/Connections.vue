@@ -20,6 +20,8 @@
 							<center>
 								<v-img  :src="searchedUser.photoURL" class="user-image"></v-img>
 							</center>
+							<v-spacer></v-spacer>
+
 							<br>
 							<h2>{{ searchedUser.name}}</h2>
 							<h3>{{ searchedUser.email }}</h3>
@@ -41,6 +43,32 @@
 			<v-row>
 				<v-col cols="12" sm="12" md="3" v-for="connectedUser in connectedUsers" :key="connectedUser.uid">
 					<v-card tile outlined class="users-card">
+						<!-- <v-card-title>
+							<v-spacer></v-spacer>
+							<v-menu bottom right>
+								<template v-slot:activator="{ on }">
+								<v-btn
+									dark
+									icon
+									v-on="on"
+								>
+									<v-icon>
+										<MenuIcon />
+									</v-icon>
+									Menu
+								</v-btn>
+								</template>
+
+								<v-list>
+								<v-list-item
+									v-for="(item, i) in items"
+									:key="i"
+								>
+									<v-list-item-title>{{ item.title }}</v-list-item-title>
+								</v-list-item>
+								</v-list>
+							</v-menu>
+						</v-card-title> -->
 						<v-card-text>
 							<center>
 								<v-img  :src="connectedUser.photoURL" class="user-image"></v-img>
@@ -51,7 +79,10 @@
 							<br>
 
 							<!-- Message button -->
-							<v-btn rounded>Message</v-btn>
+							<v-btn rounded>Message</v-btn><br><br>
+
+							<!-- Add to featured button -->
+							<v-btn rounded @click.prevent="addToFeatured(connectedUser.uid)">Add to Featured</v-btn>
 						</v-card-text>
 					</v-card>
 				</v-col>
@@ -62,10 +93,16 @@
 </template>
 
 <script>
+import MenuIcon from 'vue-material-design-icons/Menu.vue';
 import firebase from 'firebase'
 import { FireSQL } from 'firesql'
+import { mapActions } from 'vuex'
 // import * as admin from 'firebase-admin'
 export default {
+	name: 'Connections',
+	components: {
+		MenuIcon
+	},
 	data() {
 		return {
 			username: '',
@@ -74,27 +111,32 @@ export default {
 		}
 	},
 	mounted(){
-		var usersRef = firebase.firestore().collection('users')
-		usersRef.doc(`${firebase.auth().currentUser.uid}`).get()
-		.then((doc) => {
-			doc.data().connections.forEach((connection) => {
-				usersRef.doc(`${connection}`).get().then((result) => {
-					this.connectedUsers.push(result.data())
-				})
-			})
-		})
+		this.initialize()
 	},
 	methods: {
+		...mapActions('chat',['addToFeatured']),
+		initialize() {
+			this.connectedUsers = new Array()
+			var usersRef = firebase.firestore().collection('users')
+			usersRef.doc(`${firebase.auth().currentUser.uid}`).get()
+			.then((doc) => {
+				doc.data().connections.forEach((connection) => {
+					usersRef.doc(`${connection.uid}`).get().then((result) => {
+						this.connectedUsers.push(result.data())
+					})
+				})
+			})
+		},
 		checkConnection(searchedUser) {
 			if(this.connectedUsers.filter((connectedUser) => {
 				return connectedUser.uid == searchedUser.uid
 			}).length==0)
 			{
-				return true
+				return false
 			}
 			else
 			{
-				return false
+				return true
 			}
 		},
 		searchUser() {
@@ -132,14 +174,17 @@ export default {
 			var user2Ref = firebase.firestore().doc(`users/${uid}`)
 			user1Ref.get().then((doc) => {
 				var newConnections = doc.data().connections
-				newConnections.push(uid)
+				newConnections.push({uid: uid, featured: false, message: false })
 				user1Ref.update({ connections: newConnections})
 			})
 			user2Ref.get().then((doc) => {
 				var newConnections = doc.data().connections
-				newConnections.push(firebase.auth().currentUser.uid)
+				newConnections.push({ uid: firebase.auth().currentUser.uid, featured: false, message: false})
 				user2Ref.update({ connections: newConnections})
 			})
+			this.initialize()
+			this.searchedUsers = new Array()
+			this.username = ''
 		}
 	}
 }

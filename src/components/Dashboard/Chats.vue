@@ -1,13 +1,191 @@
 <template>
+<div>
+	<v-container>
+		<v-row class="hidden-sm-And-Down">
+			<v-col md="4">
+				<v-card
+					width="256"
+					class="mx-auto chat-card" flat
+				>
+					<v-navigation-drawer absolute permanent>
+					<v-list
+						dense
+						nav
+					>
+						<v-list-item
+							v-for="friend in friends"
+							:key="friend.uid"
+							@click.prevent="loadMessage(friend.uid)"
+						>
+						<v-list-item-icon>
+							<v-avatar><img :src="friend.photoURL"></v-avatar>
+						</v-list-item-icon>
 
+						<v-list-item-content>
+							<v-list-item-title>{{ friend.name }}</v-list-item-title>
+						</v-list-item-content>
+						</v-list-item>
+					</v-list>
+					</v-navigation-drawer>
+				</v-card>
+			</v-col>
+			<v-col md="8">
+				<v-card class="chat-card" flat>
+					<v-card-text v-if="selectedContactId!=''">
+						<v-row v-for="message in messages" :key="message.timestamp">
+							<v-col v-if="message.from == user.uid" cols="12">
+								<div class="message-sent">{{ message.text }}</div>
+							</v-col>
+							<v-col v-if="message.from != user.uid" cols="12">
+								<div class="message-received">{{ message.text }}</div>
+							</v-col>
+						</v-row>
+						<v-row class="message-form-textfield">
+							<v-col md="12">
+								<v-text-field outlined v-model="text" append-icon="send"
+									@click:append="sendMessage(selectedContactId) "/>
+							</v-col>
+						</v-row>
+					</v-card-text>
+				</v-card>
+			</v-col>
+		</v-row>
+	</v-container>
+</div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+import firebase from 'firebase'
 export default {
+	name: 'Chats',
+	props: {
+		drawer: {
+			type: Boolean,
+			required: false
+		}
+	},
+	data () {
+		return {
+			selectedContactId: '',
+			messages: [],
+			text: ''
+		}
+	},
+	computed: {
+		...mapState({
+			user: state => state.user.user,
+			friends: state => state.chat.friends
+		})
+	},
+	methods: {
+		...mapActions('chat',['getAllFriends','getFriendPic','getFriendName']),
+		initialize() {
+			this.getAllFriends()
+		},
+		loadMessage(uid) {
+			this.selectedContactId = uid
+			var userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+			var msgRef = userRef.collection('messages').doc(uid)
 
+			msgRef.onSnapshot((doc) => {
+				this.messages = new Array()
+				// this.messages.push(doc.data().messages)
+				this.messages = doc.data().messages
+			})
+		},
+		sendMessage(uid) {
+			var userRef1 = firebase.firestore().collection('users').doc(this.user.uid)
+			var messageRef1 = userRef1.collection('messages').doc(uid)
+			var newMessage = {
+				from: this.user.uid,
+				to: uid,
+				text: this.text,
+				timestamp: Date.now()
+			}
+			messageRef1.get().then((snapshot) => {
+				if(snapshot.exists)
+				{
+					var messages = snapshot.data().messages
+					messages.push(newMessage)
+					messageRef1.update({ messages: messages})
+				}
+				else
+				{
+					messageRef1.set({
+						messages: [
+							newMessage
+						]
+					})
+				}
+			})
+
+			var userRef2 = firebase.firestore().collection('users').doc(uid)
+			var messageRef2 = userRef2.collection('messages').doc(this.user.uid)
+
+			messageRef2.get().then((snapshot) => {
+				if(snapshot.exists)
+				{
+					var messages = snapshot.data().messages
+					messages.push(newMessage)
+					messageRef2.update({ messages: messages})
+				}
+				else
+				{
+					messageRef2.set({
+						messages: [
+							newMessage
+						]
+					})
+				}
+			})
+			this.text = ''
+		}
+	},
+	mounted () {
+		this.initialize()
+	}
 }
 </script>
 
-<style>
-
+<style scoped>
+.chat-card
+{
+	height: 65vh;
+	overflow-y: visible;
+}
+.message-form
+{
+	padding-top: 35vh;
+	/* width: 100%; */
+	position: relative;
+}
+.message-form-textfield
+{
+	bottom: 30px;
+	width: 60%;
+	position: fixed;
+	border-radius: 20px;
+}
+.message-form-btn
+{
+	margin-top:50%;
+	margin-left: 5px;
+}
+.message-sent
+{
+	float: right;
+	background-color: #9999ff;
+	width: 60%;
+	min-height: 20px;
+	border-radius: 20px;
+}
+.message-received
+{
+	float: left;
+	background-color: grey;
+	width: 60%;
+	min-height: 20px;
+	border-radius: 20px;
+}
 </style>

@@ -32,7 +32,7 @@
 							<v-card flat>
 								<v-card-text>
 									<div v-if="i==1"><Featured /></div>
-									<div v-if="i==2"><Chats /></div>
+									<div v-if="i==2"><Chats :drawer="true" /></div>
 									<div v-if="i==3"><Connections /></div>
 								</v-card-text>
 							</v-card>
