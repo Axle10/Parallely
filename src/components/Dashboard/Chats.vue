@@ -43,6 +43,7 @@
 						<v-row class="message-form-textfield">
 							<v-col md="12">
 								<v-text-field outlined v-model="text" append-icon="send"
+									placeholder="Type a message"
 									@click:append="sendMessage(selectedContactId) "/>
 							</v-col>
 						</v-row>

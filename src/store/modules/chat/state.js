@@ -1,5 +1,6 @@
 var friends = []
+var featuredFriends = []
 
 export default {
-	friends
+	friends,featuredFriends
 }

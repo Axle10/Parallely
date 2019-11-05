@@ -82,7 +82,11 @@
 							<v-btn rounded>Message</v-btn><br><br>
 
 							<!-- Add to featured button -->
-							<v-btn rounded @click.prevent="addToFeatured(connectedUser.uid)">Add to Featured</v-btn>
+							<v-btn  rounded @click.prevent="toggleFeatured(connectedUser.uid)">Add to Featured</v-btn>
+
+							<!-- Unfeature button -->
+							<!-- <v-btn v-if="checkFeatured(connectedUser.uid)==true" rounded @click.prevent="toggleFeatured(connectedUser.uid)">Unfeature</v-btn> -->
+
 						</v-card-text>
 					</v-card>
 				</v-col>
@@ -114,7 +118,7 @@ export default {
 		this.initialize()
 	},
 	methods: {
-		...mapActions('chat',['addToFeatured']),
+		...mapActions('chat',['toggleFeatured','checkFeatured']),
 		initialize() {
 			this.connectedUsers = new Array()
 			var usersRef = firebase.firestore().collection('users')

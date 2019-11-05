@@ -1,9 +1,11 @@
 <template>
 	<div>
-		<v-app-bar app elevate-on-scroll color="deep-purple accent-4" dark>
+		<v-app-bar app elevate-on-scroll class="toolbar" dark>
 			<v-app-bar-nav-icon class="hidden-md-and-up"></v-app-bar-nav-icon>
 
-			<v-toolbar-title>P A R A L L E L Y</v-toolbar-title>
+			<v-toolbar-title style="padding-top: 35px">
+				<v-img src="/static/index_logo.png" height="150px" width="150px"></v-img>
+			</v-toolbar-title>
 
 			<v-spacer />
 			<div class="user">
@@ -83,6 +85,11 @@ export default {
 </script>
 
 <style scoped>
+.toolbar
+{
+	background: linear-gradient(right,#c09fee,#650cc9)
+	/* background-color: #650cc9; */
+}
 .user
 {
 	padding-bottom: 1%;

@@ -1,15 +1,16 @@
 <template>
-	<v-app>
+	<v-app >
+		<v-container>
 		<v-row no-gutters>
 			<v-col cols="12" sm="12" md="4" offset-md="1" class="component-login">
 				<div class="particles-js">
 					<vue-particles
-						color="#9999ff"
+						color="#c09fee"
 						:particleOpacity="0.7"
 						:particlesNumber="80"
 						shapeType="circle"
 						:particleSize="4"
-						linesColor="#9999ff"
+						linesColor="#c09fee"
 						:linesWidth="1"
 						:lineLinked="true"
 						:lineOpacity="0.4"
@@ -35,11 +36,12 @@
 					</v-dialog>
 				</v-container>
 			</v-col>
-			<v-col cols="0" sm="0" md="5" offset-md="1" :class="hideOnMobile ? 'hide-on-mobile' : ''">
-				<div><Banner /></div>
+			<v-col cols="0" sm="0" md="7" :class="hideOnMobile ? 'logo-hide-on-mobile' : 'logo'">
+				<Banner />
 			</v-col>
 		</v-row>
 		<div v-if="snackbar==true"><Snackbar :message="snackbar_message" :snackbar="snackbar" /></div>
+		</v-container>
 	</v-app>
 </template>
 
@@ -101,11 +103,21 @@ export default {
     width: 100%;
     height: 100%;
 }
+.logo
+{
+	bottom: 50%;
+	right: 10%;
+	/* padding-bottom: 2px;
+	padding-right: 20%;
+	margin-right: 5%;
+	width: 100%;
+	height: 100%; */
+}
 .component-login
 {
 	margin-top: 10%;
 }
-.hide-on-mobile
+.logo-hide-on-mobile
 {
 	display: none;
 }

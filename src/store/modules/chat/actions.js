@@ -19,22 +19,59 @@ export default {
 		});
 		commit('SET_FRIENDS',friends)
 	},
-	addToFeatured({},uid) {
+	toggleFeatured({},uid) {
 		var userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
 		userRef.get().then((doc) => {
-			doc.data().connections.forEach((item,index) => {
-				if(item.uid == uid)
-				{
-					doc.data().connections[index].featured= true;
+
+			var updatedConnection = doc.data().connections.map( (connection) => {
+				return {
+					featured: connection.uid == uid ? !connection.featured : connection.featured,
+					message: connection.message,
+					uid: connection.uid
 				}
 			});
-			// console.log(user[0])
-			// var index = doc.data().connections.indexOf(user[0])
-			// console.log(index)
-			// doc.data().connections[indexOf(user[0])].update({
-			// 	featured: true,
-			// 	message: doc.data()
-			// })
+
+			userRef.update({
+				bio: doc.data().bio,
+				email: doc.data().email,
+				photoURL: doc.data().photoURL,
+				uid: doc.data().uid,
+				connections: updatedConnection
+			})
 		})
-	}
+	},
+	checkFeatured({},uid) {
+		var userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+		var featured = false;
+		return new Promise( resolve => {
+			userRef.get().then((doc) => {
+				doc.data().connections.forEach(connection => {
+					if(connection.uid == uid)
+					{
+						featured = connection.featured
+					}
+				})
+				console.log(featured)
+				resolve(featured);
+			});
+		})
+	},
+	getAllFeaturedFriends({ commit }) {
+		var ref = firebase.firestore().collection('users')
+		var userRef = ref.doc(firebase.auth().currentUser.uid)
+		var featuredFriends = new Array()
+		userRef.get().then((doc) => {
+			doc.data().connections.forEach(connection => {
+				if(connection.featured == true)
+				{
+					ref.doc(connection.uid).get().then((result) => {
+						var name = result.data().name
+						var photoURL = result.data().photoURL
+						featuredFriends.push({...connection, name: name, photoURL: photoURL})
+					})
+				}
+			});
+			commit('SET_FEATUREDFRIENDS',featuredFriends)
+		});
+	},
 }
