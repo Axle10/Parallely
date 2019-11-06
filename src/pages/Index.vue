@@ -28,7 +28,7 @@
 					Don't have an account,
 					<v-dialog v-model="signUpDialog" persistent max-width="600px">
 						<template v-slot:activator="{ on }">
-							<v-btn v-on="on" text>Sign Up</v-btn>
+							<v-btn v-on="on" text color="#650cc9">Sign Up</v-btn>
 						</template>
 						<v-card>
 							<v-card-text><SignupForm @success="success"/></v-card-text>

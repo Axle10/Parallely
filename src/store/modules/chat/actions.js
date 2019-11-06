@@ -56,11 +56,12 @@ export default {
 			});
 		})
 	},
-	getAllFeaturedFriends({ commit }) {
+	getAllFeaturedFriends({ commit,dispatch }) {
 		var ref = firebase.firestore().collection('users')
 		var userRef = ref.doc(firebase.auth().currentUser.uid)
 		var featuredFriends = new Array()
 		userRef.get().then((doc) => {
+			var index=0;
 			doc.data().connections.forEach(connection => {
 				if(connection.featured == true)
 				{
@@ -68,10 +69,26 @@ export default {
 						var name = result.data().name
 						var photoURL = result.data().photoURL
 						featuredFriends.push({...connection, name: name, photoURL: photoURL})
-					})
+						dispatch('loadMessage',{ uid: connection.uid,index: index});
+						index++;
+					});
 				}
 			});
-			commit('SET_FEATUREDFRIENDS',featuredFriends)
+			commit('SET_FEATURED_FRIENDS',featuredFriends)
+
 		});
+	},
+	loadMessage({ commit },payload) {
+		console.log('called')
+		// this.selectedContactId = uid
+		var userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+		var msgRef = userRef.collection('messages').doc(payload.uid)
+
+		msgRef.onSnapshot((doc) => {
+			// this.messages[index] = new Array()
+			// this.messages[index].push(doc.data().messages)
+			commit('SET_FEATURED_MESSAGES',{index: payload.index,messages: doc.data().messages})
+		})
+		// console.log(this.messages)
 	},
 }

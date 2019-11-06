@@ -20,7 +20,7 @@
 						label="Password" v-model="password" required>
 					</v-text-field>
 					<span v-if="message!=''" color="red">{{ message }}</span><br>
-					<v-btn type="submit" rounded color="deep-purple accent-4"
+					<v-btn type="submit" rounded color="#650cc9"
 						 form="login" dark>Login</v-btn>
 				</v-form><br>
 				<v-btn color="blue" class="white--text" rounded @click.prevent="loginUserWithFacebook">

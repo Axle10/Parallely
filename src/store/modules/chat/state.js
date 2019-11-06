@@ -1,6 +1,7 @@
 var friends = []
 var featuredFriends = []
+var featuredMessages = []
 
 export default {
-	friends,featuredFriends
+	friends,featuredFriends,featuredMessages
 }

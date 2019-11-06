@@ -1,29 +1,24 @@
 <template>
-	<v-container>
+	<v-container v-on:onload="initialize">
 		<v-row>
 			<v-col cols="12" sm="12" md="3" v-for="(featuredFriend,index) in featuredFriends" :key="featuredFriend.uid">
-				<!-- {{ loadMessage(featuredFriend.uid,index) }} -->
 				<v-card outlined tile class="featured-chat-card" height="400px" fixed>
-					<!-- {{ messages[index] }} -->
 					<v-card-title >
 						<v-avatar><img :src="featuredFriend.photoURL"></v-avatar>
 						<v-spacer />
 						<span>{{ featuredFriend.name }}</span>
 					</v-card-title>
 					<v-card-text >
+						<!-- {{ getFeaturedMessages }} -->
 
-						<div v-for="message in messages[index]" :key="message">
-							<!-- <span v-for="msg in message" :key="msg.text">{{ msg.text }}</span> -->
-							<v-row v-for="msg in message" :key="msg.timestamp">
-								<v-col v-if="msg.from == user.uid" cols="12">
-									<div class="message-sent">{{ msg.text }}</div>
-								</v-col>
-								<v-col v-if="msg.from != user.uid" cols="12">
-									<div class="message-received">{{ msg.text }}</div>
-								</v-col>
-							</v-row>
-						</div>
-
+						<v-row v-for="msg in getFeaturedMessages[index]" :key="msg">
+							<v-col v-if="msg.from == user.uid" cols="12">
+								<div class="message-sent">{{ msg.text }}</div>
+							</v-col>
+							<v-col v-if="msg.from != user.uid" cols="12">
+								<div class="message-received">{{ msg.text }}</div>
+							</v-col>
+						</v-row>
 					</v-card-text>
 					<v-card-actions class="message-form">
 						<v-row no-gutters>
@@ -31,7 +26,7 @@
 								<v-text-field outlined v-model="text" append-icon="send"
 									class="message-form-textfield"
 									placeholder="Type a message"
-									@click:append="sendMessage(selectedContactId) "/>
+									@click:append="sendMessage(featuredFriend.uid,index) "/>
 							</v-col>
 						</v-row>
 
@@ -43,7 +38,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import firebase from 'firebase'
 export default {
 	name: 'Featured',
@@ -57,41 +52,35 @@ export default {
 		return {
 			selectedContactId: '',
 			messages: [],
-			text: ''
+			text: '',
+			test: []
 		}
 	},
 	computed: {
 		...mapState({
 			user: state => state.user.user,
 			friends: state => state.chat.friends,
-			featuredFriends: state => state.chat.featuredFriends
+			featuredFriends: state => state.chat.featuredFriends,
+			featuredMessages: state => state.chat.featuredMessages
+		}),
+		...mapGetters({
+			getFeaturedMessages: "chat/getFeaturedMessages"
 		})
 	},
+	watch: {
+		featuredMessages: function() {
+			console.log('updated')
+			this.test = featuredMessages
+		}
+	},
 	methods: {
-		...mapActions('chat',['getAllFeaturedFriends','getFriendPic','getFriendName']),
-		async initialize() {
-			this.getAllFeaturedFriends().then(() => {
-				console.log(this.featuredFriends)
-				console.log(this.featuredFriends.length)
-				for(var i=0;i<this.featuredFriends.length;i++)
-				{
-					console.log(this.featuredFriends[i])
-					// this.loadMessage(featuredFriends[i].uid,i)
-				}
-			})
+		...mapActions('chat',['getAllFriends','getAllFeaturedFriends','getFriendPic','getFriendName','loadMessage']),
+		initialize() {
+			this.getAllFeaturedFriends();
+			console.log(this.featuredMessages)
 		},
-		loadMessage(uid,index) {
-			this.selectedContactId = uid
-			var userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
-			var msgRef = userRef.collection('messages').doc(uid)
 
-			msgRef.onSnapshot((doc) => {
-				this.messages[index] = new Array()
-				this.messages[index].push(doc.data().messages)
-			})
-			console.log(this.messages)
-		},
-		sendMessage(uid) {
+		sendMessage(uid,index) {
 			var userRef1 = firebase.firestore().collection('users').doc(this.user.uid)
 			var messageRef1 = userRef1.collection('messages').doc(uid)
 			var newMessage = {
@@ -136,10 +125,16 @@ export default {
 					})
 				}
 			})
+			// this.loadMessage({ uid: uid,index: index })
+			// msgRef.onSnapshot((doc) => {
+			// 	this.messages[index] = new Array()
+			// 	this.messages[index].push(doc.data().messages)
+			// 	// commit('SET_FEATURED_MESSAGES',{index: payload.index,messages: doc.data().messages})
+			// })
 			this.text = ''
 		}
 	},
-	mounted () {
+	created () {
 		this.initialize()
 	}
 }
@@ -163,17 +158,27 @@ export default {
 .message-sent
 {
 	float: right;
-	background-color: #9999ff;
+	background-color: #e8dbf7;
 	width: 60%;
 	min-height: 20px;
 	border-radius: 20px;
+	color: #320f5c;
+	padding-left: 16px;
+	padding-right: 16px;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 .message-received
 {
 	float: left;
-	background-color: grey;
+	background-color: #883cdf;
 	width: 60%;
 	min-height: 20px;
 	border-radius: 20px;
+	color: #e0e0e0;
+	padding-left: 16px;
+	padding-right: 16px;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 </style>

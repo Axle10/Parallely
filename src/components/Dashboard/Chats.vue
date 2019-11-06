@@ -16,6 +16,7 @@
 							v-for="friend in friends"
 							:key="friend.uid"
 							@click.prevent="loadMessage(friend.uid)"
+							:class="friend.uid == selectedContactId ? 'active-friend' : 'friend'"
 						>
 						<v-list-item-icon>
 							<v-avatar><img :src="friend.photoURL"></v-avatar>
@@ -44,6 +45,7 @@
 							<v-col md="12">
 								<v-text-field outlined v-model="text" append-icon="send"
 									placeholder="Type a message"
+									color="#650cc9"
 									@click:append="sendMessage(selectedContactId) "/>
 							</v-col>
 						</v-row>
@@ -154,6 +156,19 @@ export default {
 {
 	height: 65vh;
 	overflow-y: visible;
+	background-color: #fef7ff;
+}
+.active-friend
+{
+	background-color: #fef7ff;
+}
+.active-friend:hover
+{
+	background-color: #fce8ff;
+}
+.friend:hover
+{
+	background-color: #fce8ff;
 }
 .message-form
 {
@@ -176,17 +191,27 @@ export default {
 .message-sent
 {
 	float: right;
-	background-color: #9999ff;
+	background-color: #e8dbf7;
 	width: 60%;
 	min-height: 20px;
 	border-radius: 20px;
+	color: #320f5c;
+	padding-left: 16px;
+	padding-right: 16px;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 .message-received
 {
 	float: left;
-	background-color: grey;
+	background-color: #883cdf;
 	width: 60%;
 	min-height: 20px;
 	border-radius: 20px;
+	color: #e0e0e0;
+	padding-left: 16px;
+	padding-right: 16px;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 </style>

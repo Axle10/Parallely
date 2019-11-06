@@ -4,17 +4,16 @@
 		<div v-if="user.emailVerified">Email Verified</div>
 		<div v-else>Email not Verified</div>
 	</div> -->
-	<v-app class="content">
+	<v-app class="content" v-on:onload="getAllFeaturedFriends()">
 		<Header />
 		<v-content v-if="user.emailVerified">
 			<v-card flat>
 				<v-tabs
 					v-model="tab"
-
 					centered
 					center-active
 				>
-					<v-tabs-slider></v-tabs-slider>
+					<v-tabs-slider color="#650cc9"></v-tabs-slider>
 
 					<v-tab v-for="tabItem in tabItems" :key="tabItem" :href="tabItem.to" class="tab-items-title">
 						{{ tabItem.text }}
@@ -46,7 +45,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import firebase from 'firebase'
 import Header from '@/components/Header'
 import Featured from '@/components/Dashboard/Featured'
@@ -74,7 +73,7 @@ export default {
 		...mapGetters('user',['isAuthenticated'])
 	},
 	methods: {
-
+		...mapActions('chat',['getAllFeaturedFriends'])
 	},
 	mounted() {
 		// if(this.isAuthenticated===false)
@@ -91,6 +90,7 @@ export default {
 	font-size: 20px;
 	padding-left: 5%;
 	padding-right: 5%;
+	color: #5b1ca3;
 }
 </style>>
 
