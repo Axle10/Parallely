@@ -1,7 +1,7 @@
 <template>
 	<div class="logo">
 		<center>
-			<img src="../../static/index_logo.png" height="800px" width="1000px" justify-center >
+			<img src="../../static/logo_size2.png" height="500px" width="600px" justify-center >
 		</center>
 	</div>
 </template>
@@ -15,6 +15,7 @@ export default {
 <style scoped>
 .logo
 {
-	padding-right: 15%;
+	padding-left: 2%;
+	padding-top: 2%;
 }
 </style>

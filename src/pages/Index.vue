@@ -31,7 +31,7 @@
 							<v-btn v-on="on" text color="#650cc9">Sign Up</v-btn>
 						</template>
 						<v-card>
-							<v-card-text><SignupForm @success="success"/></v-card-text>
+							<v-card-text><SignupForm @success="success" @closeDialog="signUpDialog=false"/></v-card-text>
 						</v-card>
 					</v-dialog>
 				</v-container>
@@ -105,8 +105,8 @@ export default {
 }
 .logo
 {
-	bottom: 50%;
-	right: 10%;
+	/* bottom: 50%; */
+	/* right: 10%; */
 	/* padding-bottom: 2px;
 	padding-right: 20%;
 	margin-right: 5%;

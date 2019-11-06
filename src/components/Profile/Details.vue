@@ -1,9 +1,10 @@
 <template>
 <div>
 	<v-container>
-	<v-card rounded class="details-card-outer">
+	<v-card rounded class="details-card-outer" flat>
     <v-container>
-		<img :src="user.photoURL" class="image">
+		<div v-if="user.photoURL!='' && user.photoURL!=null"><img :src="user.photoURL" class="image"></div>
+		<div v-else><img src="../../../static/user.jpg" class="image"></div>
 		<br>
 		<br>
 		<h2>{{ user.displayName }}</h2>
@@ -109,6 +110,7 @@ export default {
 <style scoped>
 .details-card-outer
 {
+	margin-top: 4%;
 	height: auto;
 	border-radius: 5%;
 }

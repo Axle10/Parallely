@@ -58,6 +58,7 @@ export default {
 		loginUser() {
 			firebase.auth().signInWithEmailAndPassword(this.email,this.password)
 			.then((result) => {
+				console.log(result.user)
 				this.callSetUser(result.user)
 				this.$router.push('/dashboard')
 			})

@@ -12,8 +12,8 @@
 				<v-menu bottom offset-y>
 					<template v-slot:activator="{ on }">
 						<v-btn v-on="on" text class="user-btn">
+							<v-icon v-if="user.photoURL==''">mdi-account</v-icon>
 							<div class="user-image">
-								<v-icon v-if="user.photoURL==''">person</v-icon>
 								<div v-if="user.photoURL!='' && user.photoURL != null" ><v-img :src="user.photoURL" class="user-image"></v-img></div>
 							</div>
 							Welcome, <span> {{ user.displayName }} </span>

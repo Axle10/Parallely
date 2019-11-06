@@ -3,6 +3,12 @@ export default {
 	callSetUser({commit},payload) {
 		commit('setUser',payload)
 	},
+	callSetPhonenumber({ commit }, payload) {
+		commit('SET_PHONE_NUMBER',payload)
+	},
+	callSetName({ commit }, payload) {
+		commit('SET_NAME',payload)
+	},
 	checkUserExistence({ commit,dispatch }, payload) {
 		var firestore = firebase.firestore();
 		var userDocRef = firestore.doc(`users/${payload.uid}`)

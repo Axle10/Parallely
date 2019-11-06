@@ -18,5 +18,11 @@ export default {
 			state.user.phoneNumber = payload.phoneNumber
 			state.user.uid = payload.uid
 		}
+	},
+	SET_PHONE_NUMBER({},payload) {
+		state.user.phoneNumber = payload
+	},
+	SET_NAME({}, payload) {
+		state.user.displayName = payload
 	}
 }

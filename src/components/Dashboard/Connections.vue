@@ -43,32 +43,6 @@
 			<v-row>
 				<v-col cols="12" sm="12" md="3" v-for="connectedUser in connectedUsers" :key="connectedUser.uid">
 					<v-card tile outlined class="users-card">
-						<!-- <v-card-title>
-							<v-spacer></v-spacer>
-							<v-menu bottom right>
-								<template v-slot:activator="{ on }">
-								<v-btn
-									dark
-									icon
-									v-on="on"
-								>
-									<v-icon>
-										<MenuIcon />
-									</v-icon>
-									Menu
-								</v-btn>
-								</template>
-
-								<v-list>
-								<v-list-item
-									v-for="(item, i) in items"
-									:key="i"
-								>
-									<v-list-item-title>{{ item.title }}</v-list-item-title>
-								</v-list-item>
-								</v-list>
-							</v-menu>
-						</v-card-title> -->
 						<v-card-text>
 							<center>
 								<v-img  :src="connectedUser.photoURL" class="user-image"></v-img>
@@ -79,7 +53,7 @@
 							<br>
 
 							<!-- Message button -->
-							<v-btn rounded>Message</v-btn><br><br>
+							<v-btn rounded @click.prevent="messageUser(connectUser.uid)">Message</v-btn><br><br>
 
 							<!-- Add to featured button -->
 							<v-btn  rounded @click.prevent="toggleFeatured(connectedUser.uid)">Add to Featured</v-btn>
@@ -101,6 +75,7 @@ import MenuIcon from 'vue-material-design-icons/Menu.vue';
 import firebase from 'firebase'
 import { FireSQL } from 'firesql'
 import { mapActions } from 'vuex'
+import { connect } from 'http2';
 // import * as admin from 'firebase-admin'
 export default {
 	name: 'Connections',
@@ -190,6 +165,26 @@ export default {
 			this.searchedUsers = new Array()
 			this.username = ''
 		}
+	},
+	messageUser(uid) {
+		var userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+		userRef.get().then((doc) => {
+			var updatedConnection = doc.data().connections.map( (connection) => {
+				return {
+					featured: connection.featured,
+					message: connection.uid==uid ?  true : connection.message,
+					uid: connection.uid
+				}
+			});
+
+			userRef.update({
+				bio: doc.data().bio,
+				email: doc.data().email,
+				photoURL: doc.data().photoURL,
+				uid: doc.data().uid,
+				connections: updatedConnection
+			})
+		})
 	}
 }
 </script>
