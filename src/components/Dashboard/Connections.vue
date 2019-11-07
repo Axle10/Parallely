@@ -42,6 +42,7 @@
 		<div v-else>
 			<v-row>
 				<v-col cols="12" sm="12" md="3" v-for="connectedUser in connectedUsers" :key="connectedUser.uid">
+
 					<v-card tile outlined class="users-card">
 						<v-card-text>
 							<center>
@@ -53,7 +54,7 @@
 							<br>
 
 							<!-- Message button -->
-							<v-btn rounded @click.prevent="messageUser(connectUser.uid)">Message</v-btn><br><br>
+							<v-btn rounded @click.prevent="messageUser(connectedUser.uid)">Message</v-btn><br><br>
 
 							<!-- Add to featured button -->
 							<v-btn  rounded @click.prevent="toggleFeatured(connectedUser.uid)">Add to Featured</v-btn>
@@ -73,9 +74,9 @@
 <script>
 import MenuIcon from 'vue-material-design-icons/Menu.vue';
 import firebase from 'firebase'
-import { FireSQL } from 'firesql'
+// import { FireSQL } from 'firesql'
 import { mapActions } from 'vuex'
-import { connect } from 'http2';
+// import { connect } from 'http2';
 // import * as admin from 'firebase-admin'
 export default {
 	name: 'Connections',
@@ -95,13 +96,16 @@ export default {
 	methods: {
 		...mapActions('chat',['toggleFeatured','checkFeatured']),
 		initialize() {
-			this.connectedUsers = new Array()
+			// this.connectedUsers = new Array()
 			var usersRef = firebase.firestore().collection('users')
 			usersRef.doc(`${firebase.auth().currentUser.uid}`).get()
 			.then((doc) => {
 				doc.data().connections.forEach((connection) => {
+					console.log(connection.uid)
 					usersRef.doc(`${connection.uid}`).get().then((result) => {
+						console.log(result.data())
 						this.connectedUsers.push(result.data())
+						console.log(this.connectedUsers)
 					})
 				})
 			})
@@ -163,28 +167,29 @@ export default {
 			})
 			this.initialize()
 			this.searchedUsers = new Array()
+			// this.connectedUsers.push(newConnections)
 			this.username = ''
-		}
-	},
-	messageUser(uid) {
-		var userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
-		userRef.get().then((doc) => {
-			var updatedConnection = doc.data().connections.map( (connection) => {
-				return {
-					featured: connection.featured,
-					message: connection.uid==uid ?  true : connection.message,
-					uid: connection.uid
-				}
-			});
+		},
+		messageUser(uid) {
+			var userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+			userRef.get().then((doc) => {
+				var updatedConnection = doc.data().connections.map( (connection) => {
+					return {
+						featured: connection.featured,
+						message: connection.uid == uid ?  true : connection.message,
+						uid: connection.uid
+					}
+				});
 
-			userRef.update({
-				bio: doc.data().bio,
-				email: doc.data().email,
-				photoURL: doc.data().photoURL,
-				uid: doc.data().uid,
-				connections: updatedConnection
+				userRef.update({
+					bio: doc.data().bio,
+					email: doc.data().email,
+					photoURL: doc.data().photoURL,
+					uid: doc.data().uid,
+					connections: updatedConnection
+				})
 			})
-		})
+		}
 	}
 }
 </script>
