@@ -1,9 +1,10 @@
 import firebase from 'firebase'
-
+import state from '../user/state'
 export default {
-	getAllFriends({ commit }) {
+	getAllFriends({ commit },uid) {
 		var ref = firebase.firestore().collection('users')
-		var userRef = ref.doc(firebase.auth().currentUser.uid)
+		// console.log(state.user.uid)
+		var userRef = ref.doc(uid)
 		var friends = new Array()
 		userRef.get().then((doc) => {
 			doc.data().connections.forEach(connection => {

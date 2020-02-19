@@ -1,4 +1,4 @@
-const user = {
+var user = {
 	provider: '',
 	email: '',
 	emailVerified: '',

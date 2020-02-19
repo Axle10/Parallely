@@ -42,9 +42,7 @@ new Vue({
 		// })
 		firebase.auth().onAuthStateChanged((firebaseUser) => {
 			if(firebaseUser!=null) {
-				console.log('Current user')
-				console.log(firebase.auth().currentUser)
-				this.callSetUser(firebase.auth().currentUser)
+				this.callSetUser(firebaseUser)
 			}
 			else
 			{

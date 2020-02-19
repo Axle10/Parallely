@@ -1,45 +1,49 @@
 <template>
-	<!-- <div>
-		{{user}}
-		<div v-if="user.emailVerified">Email Verified</div>
-		<div v-else>Email not Verified</div>
-	</div> -->
 	<v-app class="content" v-on:onload="getAllFeaturedFriends()">
-		<Header />
-		<v-content v-if="user.emailVerified">
-			<v-card flat>
-				<v-tabs
-					v-model="tab"
-					centered
-					center-active
-				>
-					<v-tabs-slider color="#650cc9"></v-tabs-slider>
+		<v-content>
+		<v-row no-gutters>
+			<v-col md="2">
+				<div class="side-menu-bar">
+					<!-- Photo and name of the user -->
+					<v-row>
+						<v-col md="12">
+							<div v-if="user.photoURL!='' && user.photoURL!=null"><img :src="user.photoURL" class="image"></div>
+							<div v-else><img src="../../static/user.jpg" class="image"></div>
+							<h3>{{ user.displayName }}</h3>
+						</v-col>
+					</v-row>
+					<v-row>
+						<!-- Side menus -->
+						<v-col cols="10">
+							<div class="side-menu-items" v-for="menu in menus" :key="menu.id">
+								<div @click="setActiveMenu(menu)">
+									<div class="side-menu-icon">{{ menu.icon }}</div>
+									<div class="side-menu-title">{{ menu.title }}</div>
+								</div>
+							</div>
+						</v-col>
+					</v-row>
+					<div class="logout-menu">
+						<v-btn @click="logoutUser()" class="logout-menu-button"><i></i>Logout</v-btn>
+					</div>
+				</div>
+			</v-col>
+			<v-col md="10">
+				<div v-if="menus[1].active==true">
+					<v-row no-gutters>
+						<div class="chat-toolbar">
+							<h4>Chats</h4>
+						</div>
+					</v-row>
+					<Chats />
+				</div>
 
-					<v-tab v-for="tabItem in tabItems" :key="tabItem" :href="tabItem.to" class="tab-items-title">
-						{{ tabItem.text }}
-					</v-tab>
+				<div v-if="menus[2].active==true">
 
-				</v-tabs>
+				</div>
+			</v-col>
 
-				<v-tabs-items v-model="tab">
-					<v-tab-item
-						v-for="i in 3"
-						:key="i"
-						:value="'tab-' + i"
-					>
-						<v-container>
-							<v-card flat>
-								<v-card-text>
-									<div v-if="i==1"><Featured /></div>
-									<div v-if="i==2"><Chats :drawer="true" /></div>
-									<div v-if="i==3"><Connections /></div>
-								</v-card-text>
-							</v-card>
-						</v-container>
-					</v-tab-item>
-				</v-tabs-items>
-			</v-card>
-
+		</v-row>
 		</v-content>
 	</v-app>
 </template>
@@ -58,12 +62,26 @@ export default {
 	},
 	data() {
 		return {
-			tabItems: [
-				{ text: 'Featured' , to: '#tab-1'},
-				{ text: 'Chats' , to: '#tab-2'},
-				{ text: 'Connections' , to: '#tab-3'}
-			],
-			tab: null
+			menus: [
+				{
+					id: 1,
+					title: 'Featured',
+					icon : '',
+					active: false
+				},
+				{
+					id: 2,
+					title: 'Chats',
+					icon: '',
+					active: false
+				},
+				{
+					id: 3,
+					title: 'Profile',
+					icon: '',
+					active: false
+				}
+			]
 		}
 	},
 	computed: {
@@ -73,18 +91,112 @@ export default {
 		...mapGetters('user',['isAuthenticated'])
 	},
 	methods: {
-		...mapActions('chat',['getAllFeaturedFriends'])
+		...mapActions('chat',['getAllFeaturedFriends']),
+		...mapActions('user',['callSetUser']),
+		setActiveMenu(menu) {
+			for(var i=0;i<this.menus.length;i++) {
+				if(this.menus[i].id!=menu.id) {
+					this.menus[i].active= false;
+				}
+				else {
+					this.menus[i].active=true;
+				}
+			}
+		},
+		logoutUser() {
+			firebase.auth().signOut()
+			.then(() => {
+				this.$router.replace('/')
+			});
+			this.callSetUser({})
+		},
 	},
 	mounted() {
-		// if(this.isAuthenticated===false)
-		// {
-		// 	this.$router.replace('/')
-		// }
+		if(this.isAuthenticated===false)
+		{
+			this.$router.replace('/')
+		}
 	}
 }
 </script>
 
 <style scoped>
+.image
+{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    margin-top:5%;
+	border: 1px solid purple
+}
+.side-menu-bar
+{
+	height: 100vh;
+	width: auto;
+	background-color: #c09fee;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+}
+.side-menu-items
+{
+	cursor: pointer;
+	border-radius: 10px;
+	transition: 0.2s ease-in;
+	margin-left: 5px;
+}
+.side-menu-icon
+{
+	margin: 5px;
+}
+.side-menu-title
+{
+	margin: 5px;
+	font-size: 20px;
+	color: white;
+}
+.side-menu-items:hover {
+	background-color: #5b1ca3;
+	box-sizing: border-box;
+	box-shadow: 0px 2px 0px 0px black;
+}
+.side-menu-items:hover .side-menu-title {
+	transform: translateX(5px);
+}
+.logout-menu {
+	background-color: transparent;
+	cursor: pointer;
+	text-transform: uppercase;
+	position: absolute;
+	bottom: 5%;
+	left: 5%;
+	display: flex;
+	justify-content: center;
+	align-self: center;
+	align-items: center;
+}
+.logout-menu-button {
+	border-radius: 10px 0 10px 10px;
+	background-color: transparent !important;
+	color: #555555;
+	transition: 0.2s ease-out;
+}
+.logout-menu-button:hover {
+	/* transform: translateZ(-10px); */
+	transition: 0.2s ease-in;
+	background-color: #5b1ca3 !important;
+	color: white;
+}
+.chat-toolbar {
+	height: 2vh;
+}
+.chat-toolbar > h4 {
+	padding-left: 60px;
+	color:#5b1ca3;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	padding-top: 10px;
+}
 .tab-items-title
 {
 	font-size: 20px;
@@ -92,5 +204,6 @@ export default {
 	padding-right: 5%;
 	color: #5b1ca3;
 }
-</style>>
+</style>
+
 

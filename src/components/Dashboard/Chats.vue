@@ -30,8 +30,8 @@
 					</v-navigation-drawer>
 				</v-card>
 			</v-col>
-			<v-col md="8">
-				<v-card class="chat-card" flat>
+			<v-col md="8" id="message-box">
+				<v-card class="chat-card chat-history" flat id="chat-card">
 					<v-card-text v-if="selectedContactId!=''">
 						<v-row v-for="message in messages" :key="message.timestamp">
 							<v-col v-if="message.from == user.uid" cols="12">
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import firebase from 'firebase'
 export default {
 	name: 'Chats',
@@ -79,12 +79,13 @@ export default {
 		...mapState({
 			user: state => state.user.user,
 			friends: state => state.chat.friends
-		})
+		}),
+		...mapGetters('user', ['isAuthenticated'])
 	},
 	methods: {
 		...mapActions('chat',['getAllFriends','getFriendPic','getFriendName']),
 		initialize() {
-			this.getAllFriends()
+			this.getAllFriends(this.user.uid)
 		},
 		loadMessage(uid) {
 			this.selectedContactId = uid
@@ -146,7 +147,11 @@ export default {
 		}
 	},
 	mounted () {
-		this.initialize()
+		this.initialize();
+		var chatCard = document.getElementById('chat-card');
+		var height = chatCard.scrollHeight;
+		// chatCard.scrollTo = height;
+		chatCard.scrollBy(0,height)
 	}
 }
 </script>
@@ -154,9 +159,20 @@ export default {
 <style scoped>
 .chat-card
 {
-	height: 65vh;
+	height: 90vh;
 	overflow-y: visible;
 	background-color: #fef7ff;
+	position: relative;
+	overflow-y: scroll;
+}
+.chat-card::-webkit-scrollbar {
+	color: red;
+	position: absolute;
+	bottom: 100;
+}
+.chat-history
+{
+	height: 75vh;
 }
 .active-friend
 {
@@ -179,7 +195,7 @@ export default {
 .message-form-textfield
 {
 	bottom: 30px;
-	width: 60%;
+	width: 50vw;
 	position: fixed;
 	border-radius: 20px;
 }
