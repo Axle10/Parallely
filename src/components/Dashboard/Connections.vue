@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="connections-div">
 	<v-container>
 		<v-row>
 			<v-col cols="12" sm="12" md="6" offset-md="3">
@@ -195,6 +195,15 @@ export default {
 </script>
 
 <style scoped>
+.connections-div {
+	height: 85vh;
+	overflow-y: visible;
+	position: relative;
+	background-color: #fef7ff;
+
+	overflow-y: scroll;
+}
+
 .users-card
 {
 	border-radius: 20px;

@@ -8,7 +8,8 @@
 						<v-spacer />
 						<span>{{ featuredFriend.name }}</span>
 					</v-card-title>
-					<v-card-text >
+
+					<v-card-text class="chat-history">
 						<!-- {{ getFeaturedMessages }} -->
 
 						<v-row v-for="msg in getFeaturedMessages[index]" :key="msg">
@@ -20,6 +21,8 @@
 							</v-col>
 						</v-row>
 					</v-card-text>
+
+
 					<v-card-actions class="message-form">
 						<v-row no-gutters>
 							<v-col cols="12" sm="12" md="12">
@@ -144,6 +147,8 @@ export default {
 .featured-chat-card
 {
 	border-radius: 20px;
+	position: relative;
+	overflow-y: scroll;
 }
 .message-form
 {

@@ -159,7 +159,7 @@ export default {
 <style scoped>
 .chat-card
 {
-	height: 90vh;
+	height: 80vh;
 	overflow-y: visible;
 	background-color: #fef7ff;
 	position: relative;
@@ -172,7 +172,7 @@ export default {
 }
 .chat-history
 {
-	height: 75vh;
+	height: 65vh;
 }
 .active-friend
 {

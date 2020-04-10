@@ -35,17 +35,14 @@ new Vue({
 	created() {
 		// Initialize firebase
 		firebase.initializeApp(firebaseConfig);
-		// Initialize firebase-admin
-		// admin.initializeApp({
-		// 	credential: firebaseAdminKey,
-		// 	databaseURL: 'https://parallely-652a6.firebaseio.com'
-		// })
+
 		firebase.auth().onAuthStateChanged((firebaseUser) => {
 			if(firebaseUser!=null) {
 				this.callSetUser(firebaseUser)
 			}
 			else
 			{
+				this.$router.replace('/');
 				this.callSetUser({})
 			}
 		})

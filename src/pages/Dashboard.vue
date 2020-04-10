@@ -1,9 +1,10 @@
 <template>
 	<v-app class="content" v-on:onload="getAllFeaturedFriends()">
 		<v-content>
+
 		<v-row no-gutters>
-			<v-col md="2">
-				<div class="side-menu-bar">
+			<v-col md="2" v-if="drawer">
+				<div class="side-menu-bar" >
 					<!-- Photo and name of the user -->
 					<v-row>
 						<v-col md="12">
@@ -28,7 +29,17 @@
 					</div>
 				</div>
 			</v-col>
-			<v-col md="10">
+			<v-col :md="drawer ? 10 : 12">
+				<v-toolbar class="toolbar">
+					<div class="hamburger-menu-icon" @click="toggleDrawer()">
+					<v-icon>menu</v-icon>
+				</div>
+				</v-toolbar>
+
+				<div v-if="menus[0].active==true">
+					<Featured />
+				</div>
+
 				<div v-if="menus[1].active==true">
 					<v-row no-gutters>
 						<div class="chat-toolbar">
@@ -39,6 +50,10 @@
 				</div>
 
 				<div v-if="menus[2].active==true">
+					<Connections />
+				</div>
+
+				<div v-if="menus[3].active==true">
 
 				</div>
 			</v-col>
@@ -62,6 +77,7 @@ export default {
 	},
 	data() {
 		return {
+			drawer: true,
 			menus: [
 				{
 					id: 1,
@@ -77,6 +93,12 @@ export default {
 				},
 				{
 					id: 3,
+					title: 'Connections',
+					icon: '',
+					active: false
+				},
+				{
+					id: 4,
 					title: 'Profile',
 					icon: '',
 					active: false
@@ -93,6 +115,11 @@ export default {
 	methods: {
 		...mapActions('chat',['getAllFeaturedFriends']),
 		...mapActions('user',['callSetUser']),
+
+		toggleDrawer() {
+			this.drawer = !this.drawer;
+
+		},
 		setActiveMenu(menu) {
 			for(var i=0;i<this.menus.length;i++) {
 				if(this.menus[i].id!=menu.id) {
@@ -111,16 +138,28 @@ export default {
 			this.callSetUser({})
 		},
 	},
-	mounted() {
-		if(this.isAuthenticated===false)
-		{
-			this.$router.replace('/')
-		}
+	created() {
+		// console.log(this.isAuthenticated);
+		// if(this.isAuthenticated === 0)
+		// {
+		// 	this.$router.replace('/')
+		// }
 	}
 }
 </script>
 
 <style scoped>
+.toolbar
+{
+	height: 15vh;
+}
+.hamburger-menu-icon
+{
+	float: left;
+	padding-left: 10px;
+	margin-top: 5px;
+	cursor: pointer;
+}
 .image
 {
     width:100px;
